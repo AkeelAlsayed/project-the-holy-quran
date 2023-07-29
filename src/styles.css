@@ -42,7 +42,7 @@ body {
   font-family: var(--font-main);
   overflow-x: hidden;
   background-color: var(--color-dark-gray);
-  margin-top: -80px;
+  margin-top: 80px;
   /* margin: 0 20px; */
 }
 
@@ -335,7 +335,7 @@ audio {
 }
 
 /* Small devices (phones, 360px and up) */
-@media (max-width: 360px) {
+@media (max-width: 500.98px) {
   :root {
     --menu-width: 150px;
     --font-main: 12px;
