@@ -42,7 +42,7 @@ body {
   font-family: var(--font-main);
   overflow-x: hidden;
   background-color: var(--color-dark-gray);
-  margin-top: -80px;
+  margin-top: 80px;
   /* margin: 0 20px; */
 }
 
