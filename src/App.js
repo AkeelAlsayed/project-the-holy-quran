@@ -3,8 +3,9 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import SignUp from "./SignUp/SignUp";
 import Login from "./Login/Login";
-import Recorder from "./Recorder/Recorder";
+// import Recorder from "./Recorder/Recorder";
 import QuranPlayer from "./QuranPlayer/QuranPlayer";
+// import AuthProvider from "./AuthContext";
 
 const App = () => {
   return (
@@ -18,9 +19,9 @@ const App = () => {
             <li>
               <Link to="/login">Login</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/recorder">Recorder</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/quranplayer">Quran Player</Link>
             </li>
@@ -32,7 +33,7 @@ const App = () => {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/recorder" element={<Recorder />} />
+          {/* <Route path="/recorder" element={<Recorder />} /> */}
           <Route path="/quranplayer" element={<QuranPlayer />} />
         </Routes>
       </div>

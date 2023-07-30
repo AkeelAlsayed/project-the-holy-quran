@@ -9,6 +9,9 @@ const Recorder = () => {
   const user = auth.currentUser;
   const storage = getStorage();
 
+  // if there's no logged in user, don't render anything
+  if (!user) return null;
+
   const startRecording = () => {
     setRecord(true);
   };
@@ -36,10 +39,6 @@ const Recorder = () => {
       console.error("Error uploading audio:", error);
     }
   };
-
-  if (!user) {
-    return <div>You need to be logged in to access this page.</div>;
-  }
 
   return (
     <div>
