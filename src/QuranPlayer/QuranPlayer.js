@@ -6,14 +6,12 @@ import SurahDetails from "../SurahDetails/SurahDetails";
 import Ayah from "../Ayah/Ayah";
 import "../styles.css";
 
-
-
 const QuranPlayer = () => {
   const [state, setState] = useState({
     selectedNumber: "1",
     selectedAudio: "ar.alafasy",
     selectedTranslations: ["en.sahih"],
-    selectedLanguage: "English"
+    selectedLanguage: "English",
   });
 
   const [editionsWithAudio, setEditionsWithAudio] = useState([]);
@@ -39,7 +37,7 @@ const QuranPlayer = () => {
     const { name, value } = e.target;
     setState((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -49,15 +47,15 @@ const QuranPlayer = () => {
         ...prevState,
         selectedTranslations: prevState.selectedTranslations.filter(
           (identifier) => identifier !== selectedIdentifier
-        )
+        ),
       }));
     } else {
       setState((prevState) => ({
         ...prevState,
         selectedTranslations: [
           ...prevState.selectedTranslations,
-          selectedIdentifier
-        ]
+          selectedIdentifier,
+        ],
       }));
     }
   };
@@ -67,7 +65,7 @@ const QuranPlayer = () => {
       ...prevState,
       selectedTranslations: prevState.selectedTranslations.filter(
         (edition) => edition !== editionIdentifier
-      )
+      ),
     }));
   };
 
@@ -152,21 +150,21 @@ const QuranPlayer = () => {
         </div>
 
         <div>
-  {audioSurahData &&
-    audioSurahData.ayahs &&
-    audioSurahData.ayahs.map((ayah, ayahIndex) => (
-      <Ayah
-        key={ayahIndex}
-        ayah={ayah}
-        ayahIndex={ayahIndex}
-        state={state}
-        translationSurahData={translationSurahData}
-        audioRefs={audioRefs}
-        setCurrentAyah={setCurrentAyah}
-        handleAudioPlay={handleAudioPlay} // Pass handleAudioPlay as a prop
-      />
-    ))}
-</div>
+          {audioSurahData &&
+            audioSurahData.ayahs &&
+            audioSurahData.ayahs.map((ayah, ayahIndex) => (
+              <Ayah
+                key={ayahIndex}
+                ayah={ayah}
+                ayahIndex={ayahIndex}
+                state={state}
+                translationSurahData={translationSurahData}
+                audioRefs={audioRefs}
+                setCurrentAyah={setCurrentAyah}
+                handleAudioPlay={handleAudioPlay} // Pass handleAudioPlay as a prop
+              />
+            ))}
+        </div>
       </div>
     </div>
   );
