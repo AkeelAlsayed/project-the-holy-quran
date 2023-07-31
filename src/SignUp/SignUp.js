@@ -1,23 +1,17 @@
-// src/SignUp.js
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  VStack,
+} from "@chakra-ui/react";
 
 const SignUp = () => {
-  const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -38,47 +32,35 @@ const SignUp = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Typography component="h1" variant="h5">
-        Sign Up
-      </Typography>
-      <form className={classes.form} onSubmit={handleSignUp}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-          autoFocus
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
+    <Container maxW="container.sm">
+      <VStack spacing={4} align="stretch">
+        <Heading as="h1" size="lg">
           Sign Up
-        </Button>
-      </form>
+        </Heading>
+        <Box as="form" onSubmit={handleSignUp}>
+          <FormControl isRequired>
+            <FormLabel htmlFor="email">Email Address</FormLabel>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormControl>
+          <Button mt={4} width="full" colorScheme="teal" type="submit">
+            Sign Up
+          </Button>
+        </Box>
+      </VStack>
     </Container>
   );
 };

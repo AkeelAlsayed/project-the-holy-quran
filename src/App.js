@@ -1,59 +1,64 @@
 import React from "react";
 import {
+  Box,
+  Button,
+  ChakraProvider,
+  extendTheme,
+  Heading,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
+import {
   BrowserRouter as Router,
   Route,
   Link as RouterLink,
   Routes,
 } from "react-router-dom";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import SignUp from "./SignUp/SignUp";
 import Login from "./Login/Login";
 import QuranPlayer from "./QuranPlayer/QuranPlayer";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
+// Define a custom theme
+const theme = extendTheme({
+  styles: {
+    global: {
+      body: {
+        // Use any color keys in your palette
+        bg: "gray.100",
+        color: "gray.800",
+      },
+    },
   },
-  appBar: {
-    marginBottom: theme.spacing(3), // change the number for more or less space
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+});
 
 const App = () => {
-  const classes = useStyles();
-
   return (
-    <Router>
-      <div className={classes.root}>
-        <AppBar position="static" className={classes.appBar}>
-          <Toolbar>
-            <Button color="inherit" component={RouterLink} to="/quranplayer">
+    <ChakraProvider theme={theme}>
+      <Router>
+        <Box bg="teal.500" w="100%" p={4} color="white">
+          <ChakraLink as={RouterLink} to="/quranplayer" m={3}>
+            <Button colorScheme="teal" variant="ghost">
               Quran Player
             </Button>
-            <Typography variant="h6" className={classes.title} />
-            <Button color="inherit" component={RouterLink} to="/signup">
+          </ChakraLink>
+          <ChakraLink as={RouterLink} to="/signup" m={3}>
+            <Button colorScheme="teal" variant="ghost">
               Sign Up
             </Button>
-            <Button color="inherit" component={RouterLink} to="/login">
+          </ChakraLink>
+          <ChakraLink as={RouterLink} to="/login" m={3}>
+            <Button colorScheme="teal" variant="ghost">
               Login
             </Button>
-          </Toolbar>
-        </AppBar>
+          </ChakraLink>
+        </Box>
 
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/quranplayer" element={<QuranPlayer />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </ChakraProvider>
   );
 };
 

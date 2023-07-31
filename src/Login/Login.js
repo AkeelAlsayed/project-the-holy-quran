@@ -1,25 +1,10 @@
-// src/Login.js
 import React, { useContext, useState } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import firebaseApp from "../firebase"; // Import the firebase.js file
 import { AuthContext } from "../AuthContext"; // Import the AuthContext
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+import { Box, VStack, Heading, Input, Button } from "@chakra-ui/react";
 
 const Login = () => {
-  const classes = useStyles();
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,48 +41,35 @@ const Login = () => {
   const handleSubmit = currentUser ? handleLogout : handleLogin;
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Typography component="h1" variant="h5">
+    <Box maxWidth="400px" mx="auto" mt={5}>
+      <Heading as="h1" size="lg" textAlign="center">
         {currentUser ? "Logout" : "Login"}
-      </Typography>
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required={!currentUser}
-          fullWidth
+      </Heading>
+      <VStack as="form" onSubmit={handleSubmit} spacing={4} mt={5}>
+        <Input
+          variant="outline"
+          isRequired={!currentUser}
           id="email"
-          label="Email Address"
           name="email"
-          autoComplete="email"
-          autoFocus
+          placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required={!currentUser}
-          fullWidth
-          name="password"
-          label="Password"
+        <Input
+          variant="outline"
+          isRequired={!currentUser}
           type="password"
           id="password"
-          autoComplete="current-password"
+          name="password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
+        <Button type="submit" colorScheme="blue" width="100%" variant="solid">
           {currentUser ? "Logout" : "Login"}
         </Button>
-      </form>
-    </Container>
+      </VStack>
+    </Box>
   );
 };
 

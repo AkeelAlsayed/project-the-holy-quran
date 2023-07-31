@@ -1,27 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Box,
   Button,
-  Container,
-  Typography,
+  Heading,
   Drawer,
-  makeStyles,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+  VStack,
+  IconButton,
+} from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 import Menu from "../Menu/Menu";
 import SurahDetails from "../SurahDetails/SurahDetails";
 import Ayah from "../Ayah/Ayah";
 
-const useStyles = makeStyles({
-  drawer: {
-    width: "250px",
-    backgroundColor: "#f7f7f7",
-  },
-});
-
 const QuranPlayer = () => {
-  const classes = useStyles();
-
   const [state, setState] = useState({
     selectedNumber: "1",
     selectedAudio: "ar.alafasy",
@@ -145,33 +140,36 @@ const QuranPlayer = () => {
   }, [state.selectedNumber, state.selectedAudio, state.selectedTranslations]);
 
   return (
-    <Container>
-      <Button
-        variant="contained"
-        color="primary"
+    <VStack p={5}>
+      <IconButton
+        variant="outline"
+        colorScheme="blue"
+        aria-label="Open menu"
+        icon={<HamburgerIcon />}
         onClick={toggleMenu}
-        startIcon={<MenuIcon />}
-      >
-        Menu
-      </Button>
-      <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
-        <div className={classes.drawer}>
-          <Menu
-            toggleMenu={toggleMenu}
-            handleChange={handleChange}
-            handleTranslationChange={handleTranslationChange}
-            handleTranslationDelete={handleTranslationDelete}
-            state={state}
-            languages={languages}
-            editionsWithAudio={editionsWithAudio}
-            editionsWithTranslation={editionsWithTranslation}
-          />
-        </div>
+      />
+      <Drawer placement="left" onClose={toggleMenu} isOpen={isMenuOpen}>
+        <DrawerOverlay>
+          <DrawerContent backgroundColor="#f7f7f7">
+            <DrawerBody>
+              <Menu
+                toggleMenu={toggleMenu}
+                handleChange={handleChange}
+                handleTranslationChange={handleTranslationChange}
+                handleTranslationDelete={handleTranslationDelete}
+                state={state}
+                languages={languages}
+                editionsWithAudio={editionsWithAudio}
+                editionsWithTranslation={editionsWithTranslation}
+              />
+            </DrawerBody>
+          </DrawerContent>
+        </DrawerOverlay>
       </Drawer>
-      <Container className={`main-content ${isMenuOpen ? "open" : "shift"}`}>
-        <Typography variant="h2" align="center">
+      <Box w="100%" className={`main-content ${isMenuOpen ? "open" : "shift"}`}>
+        <Heading as="h2" size="xl" textAlign="center">
           The Holy Quran
-        </Typography>
+        </Heading>
         <SurahDetails audioSurahData={audioSurahData} />
         {audioSurahData &&
           audioSurahData.ayahs &&
@@ -187,8 +185,8 @@ const QuranPlayer = () => {
               handleAudioPlay={handleAudioPlay} // Pass handleAudioPlay as a prop
             />
           ))}
-      </Container>
-    </Container>
+      </Box>
+    </VStack>
   );
 };
 
