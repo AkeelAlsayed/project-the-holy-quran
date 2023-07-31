@@ -2,8 +2,19 @@ import React, { useState } from "react";
 import { ReactMic } from "react-mic";
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
 
 const Recorder = () => {
+  const classes = useStyles();
   const [record, setRecord] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
@@ -41,8 +52,10 @@ const Recorder = () => {
   };
 
   return (
-    <div>
-      <h2>Recorder</h2>
+    <Container>
+      <Typography variant="h5" component="h2" align="center">
+        Recorder
+      </Typography>
       <ReactMic
         record={record}
         className="sound-wave"
@@ -51,13 +64,23 @@ const Recorder = () => {
         strokeColor="#000000"
         backgroundColor="#FF4081"
       />
-      <button onClick={startRecording} type="button">
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        onClick={startRecording}
+      >
         Start
-      </button>
-      <button onClick={stopRecording} type="button">
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        onClick={stopRecording}
+      >
         Stop
-      </button>
-    </div>
+      </Button>
+    </Container>
   );
 };
 

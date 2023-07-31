@@ -1,32 +1,56 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  Button,
+  MenuItem,
+  FormControl,
+  Select,
+  Typography,
+  List,
+  ListItem,
+  makeStyles,
+} from "@material-ui/core";
 import icon from "../images/icons/donation-gf5437d159_1280.png";
 
+const useStyles = makeStyles((theme) => ({
+  menu: {
+    padding: theme.spacing(2),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
+
+// PayPal Button
 const PayPalButton = () => {
-    return (
-      <form action="https://www.paypal.com/donate" method="post" target="_blank">
-        <input type="hidden" name="business" value="Inlinex7@gmail.com" />
-        <input type="hidden" name="currency_code" value="USD" />
-        <h3>Support us:</h3>
-        <input
-          type="image"
-          src={icon}
-          name="submit"
-          title="PayPal - The safer, easier way to pay online!"
-          alt="Donate with PayPal button"
-          width="35%"
-          style={{ display: "flex", justifySelf: "center" }}
-        />
-        <img
-          alt=""
-          src="https://www.paypal.com/en_US/i/scr/pixel.gif"
-          width="1"
-          height="1"
-        />
-      </form>
-    );
-  };
+  return (
+    <form action="https://www.paypal.com/donate" method="post" target="_blank">
+      <input type="hidden" name="business" value="Inlinex7@gmail.com" />
+      <input type="hidden" name="currency_code" value="USD" />
+      <Typography variant="h6" align="center">
+        Support us:
+      </Typography>
+      <Button variant="outlined">
+        <img src={icon} alt="Donate" width="35%" />
+      </Button>
+      <img
+        alt=""
+        src="https://www.paypal.com/en_US/i/scr/pixel.gif"
+        width="1"
+        height="1"
+      />
+    </form>
+  );
+};
+
 const Menu = ({
   isMenuOpen,
   toggleMenu,
@@ -38,57 +62,73 @@ const Menu = ({
   editionsWithAudio,
   editionsWithTranslation,
 }) => {
+  const classes = useStyles();
+
   return (
-    <div id="myMenu" className={`menu ${isMenuOpen ? "open" : ""}`}>
-      <button className="closeBtn" onClick={toggleMenu}>
+    <div
+      id="myMenu"
+      className={`menu ${isMenuOpen ? "open" : ""} ${classes.menu}`}
+    >
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="secondary"
+        onClick={toggleMenu}
+      >
         <FontAwesomeIcon icon={faTimes} />
-      </button>
-      {/* PayPalButton added here */}
-      <div className="donate-button">
-        {/* <h2>Support Us:</h2> */}
-        <PayPalButton />
-      </div>
-      <div>
-        <label>Select a Surah number</label>
-        <select name="selectedNumber" onChange={handleChange}>
-          <option value="">Select a Surah number</option>
+      </Button>
+      <PayPalButton />
+      <FormControl variant="filled" className={classes.formControl}>
+        <Typography variant="subtitle1">Select a Surah number:</Typography>
+        <Select name="selectedNumber" onChange={handleChange}>
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
           {Array.from({ length: 114 }, (_, i) => (
-            <option key={i} value={i + 1}>
+            <MenuItem key={i} value={i + 1}>
               {i + 1}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-      </div>
-      <div>
-        <label>Select an audio edition</label>
+        </Select>
+      </FormControl>
+      <FormControl variant="filled" className={classes.formControl}>
+        <Typography variant="subtitle1">Select an audio edition:</Typography>
         {editionsWithAudio.length > 0 && (
-          <select name="selectedAudio" onChange={handleChange}>
-            <option value="">Select an audio edition</option>
+          <Select name="selectedAudio" onChange={handleChange}>
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
             {editionsWithAudio.map((edition) => (
-              <option key={edition.identifier} value={edition.identifier}>
+              <MenuItem key={edition.identifier} value={edition.identifier}>
                 {edition.name}
-              </option>
+              </MenuItem>
             ))}
-          </select>
+          </Select>
         )}
-      </div>
-      <div>
+      </FormControl>
+      <FormControl variant="filled" className={classes.formControl}>
         {editionsWithTranslation.length > 0 && (
           <div>
-            <label>Select translation editions:</label>
-            <select name="selectedLanguage" onChange={handleChange}>
-              <option value="">Select a language</option>
+            <Typography variant="subtitle1">
+              Select translation editions:
+            </Typography>
+            <Select name="selectedLanguage" onChange={handleChange}>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
               {languages.map((language, index) => (
-                <option key={index} value={language}>
+                <MenuItem key={index} value={language}>
                   {language}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-            <div>
+            </Select>
+            <List>
               {editionsWithTranslation
-                .filter((edition) => edition.language === state.selectedLanguage)
+                .filter(
+                  (edition) => edition.language === state.selectedLanguage
+                )
                 .map((edition) => (
-                  <div
+                  <ListItem
                     key={edition.identifier}
                     className={`translation-option ${
                       state.selectedTranslations.includes(edition.identifier)
@@ -98,40 +138,37 @@ const Menu = ({
                     onClick={() => handleTranslationChange(edition.identifier)}
                   >
                     {edition.name}
-                  </div>
+                  </ListItem>
                 ))}
-            </div>
+            </List>
           </div>
         )}
-      </div>
-
-      <div>
-        <h2>Selected Translations:</h2>
-        <div>
-          {editionsWithTranslation.length > 0 &&
-            state.selectedTranslations.map((selectedTranslation) => {
-              const edition = editionsWithTranslation.find(
-                (edition) => edition.identifier === selectedTranslation
-              );
-              return (
-                <div
-                  key={selectedTranslation}
-                  className={`translation-option ${
-                    state.selectedTranslations.includes(selectedTranslation)
-                      ? "selected"
-                      : ""
-                  }`}
-                  onClick={() => handleTranslationDelete(selectedTranslation)}
-                >
-                  {edition.name} ({edition.language}){" "}
-                  <button>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-              );
-            })}
-        </div>
-      </div>
+      </FormControl>
+      <Typography variant="h6">Selected Translations:</Typography>
+      <List>
+        {editionsWithTranslation.length > 0 &&
+          state.selectedTranslations.map((selectedTranslation) => {
+            const edition = editionsWithTranslation.find(
+              (edition) => edition.identifier === selectedTranslation
+            );
+            return (
+              <ListItem
+                key={selectedTranslation}
+                className={`translation-option ${
+                  state.selectedTranslations.includes(selectedTranslation)
+                    ? "selected"
+                    : ""
+                }`}
+                onClick={() => handleTranslationDelete(selectedTranslation)}
+              >
+                {edition.name} ({edition.language}){" "}
+                <Button>
+                  <FontAwesomeIcon icon={faTrash} />
+                </Button>
+              </ListItem>
+            );
+          })}
+      </List>
     </div>
   );
 };
