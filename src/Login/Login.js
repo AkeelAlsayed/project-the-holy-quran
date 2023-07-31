@@ -3,8 +3,23 @@ import React, { useContext, useState } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import firebaseApp from "../firebase"; // Import the firebase.js file
 import { AuthContext } from "../AuthContext"; // Import the AuthContext
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const Login = () => {
+  const classes = useStyles();
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +40,7 @@ const Login = () => {
         console.error(errorCode, errorMessage);
       });
   };
-  // console.log(currentUser.uid);
+
   const handleLogout = () => {
     const auth = getAuth(firebaseApp);
     signOut(auth)
@@ -41,30 +56,48 @@ const Login = () => {
   const handleSubmit = currentUser ? handleLogout : handleLogin;
 
   return (
-    <div>
-      <h2>{currentUser ? "Logout" : "Login"}</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required={!currentUser}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required={!currentUser}
-          />
-        </div>
-        <button type="submit">{currentUser ? "Logout" : "Login"}</button>
+    <Container component="main" maxWidth="xs">
+      <Typography component="h1" variant="h5">
+        {currentUser ? "Logout" : "Login"}
+      </Typography>
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required={!currentUser}
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required={!currentUser}
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
+          {currentUser ? "Logout" : "Login"}
+        </Button>
       </form>
-    </div>
+    </Container>
   );
 };
 
