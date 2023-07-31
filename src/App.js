@@ -29,7 +29,7 @@ const theme = extendTheme({
     },
   },
 });
-
+// App
 const App = () => {
   return (
     <ChakraProvider theme={theme}>
