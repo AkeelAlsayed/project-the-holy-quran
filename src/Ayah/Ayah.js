@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   ayahText: {
     marginBottom: "10px",
-    fontSize: "22px",
+    fontSize: "21px",
     lineHeight: "1.5",
     textAlign: "center",
   },
