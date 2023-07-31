@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import IconButton from "@mui/material/IconButton";
 
+import MenuButton from "../MenuButton/MenuButton";
 import Menu from "../Menu/Menu";
 import SurahDetails from "../SurahDetails/SurahDetails";
 import Ayah from "../Ayah/Ayah";
+import "../styles.css";
 
 const QuranPlayer = () => {
   const [state, setState] = useState({
@@ -131,16 +130,8 @@ const QuranPlayer = () => {
   }, [state.selectedNumber, state.selectedAudio, state.selectedTranslations]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <IconButton
-        size="large"
-        edge="start"
-        color="inherit"
-        aria-label="menu"
-        onClick={toggleMenu}
-      >
-        <MenuIcon />
-      </IconButton>
+    <div className="nav-bar">
+      <MenuButton onClick={toggleMenu} isMenuOpen={isMenuOpen} />
       <Menu
         isMenuOpen={isMenuOpen}
         toggleMenu={toggleMenu}
@@ -152,29 +143,30 @@ const QuranPlayer = () => {
         editionsWithAudio={editionsWithAudio}
         editionsWithTranslation={editionsWithTranslation}
       />
-      <Box>
-        <Typography variant="h3" component="div" gutterBottom>
-          The Holy Quran
-        </Typography>
-        <SurahDetails audioSurahData={audioSurahData} />
-      </Box>
-      <Box>
-        {audioSurahData &&
-          audioSurahData.ayahs &&
-          audioSurahData.ayahs.map((ayah, ayahIndex) => (
-            <Ayah
-              key={ayahIndex}
-              ayah={ayah}
-              ayahIndex={ayahIndex}
-              state={state}
-              translationSurahData={translationSurahData}
-              audioRefs={audioRefs}
-              setCurrentAyah={setCurrentAyah}
-              handleAudioPlay={handleAudioPlay} // Pass handleAudioPlay as a prop
-            />
-          ))}
-      </Box>
-    </Box>
+      <div className={`main-content  ${isMenuOpen ? "open" : "shift"}`}>
+        <h1 className="h1-heading">The Holy Quran</h1>
+        <div>
+          <SurahDetails audioSurahData={audioSurahData} />
+        </div>
+
+        <div>
+          {audioSurahData &&
+            audioSurahData.ayahs &&
+            audioSurahData.ayahs.map((ayah, ayahIndex) => (
+              <Ayah
+                key={ayahIndex}
+                ayah={ayah}
+                ayahIndex={ayahIndex}
+                state={state}
+                translationSurahData={translationSurahData}
+                audioRefs={audioRefs}
+                setCurrentAyah={setCurrentAyah}
+                handleAudioPlay={handleAudioPlay} // Pass handleAudioPlay as a prop
+              />
+            ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
