@@ -1,39 +1,43 @@
-// src/App.js
 import React from "react";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link as RouterLink, Routes } from "react-router-dom";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 import SignUp from "./SignUp/SignUp";
 import Login from "./Login/Login";
-// import Recorder from "./Recorder/Recorder";
 import QuranPlayer from "./QuranPlayer/QuranPlayer";
-// import AuthProvider from "./AuthContext";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
 const App = () => {
+  const classes = useStyles();
+
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/signup">Sign Up</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            {/* <li>
-              <Link to="/recorder">Recorder</Link>
-            </li> */}
-            <li>
-              <Link to="/quranplayer">Quran Player</Link>
-            </li>
-          </ul>
-        </nav>
-
-        <hr />
-
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              Quran App
+            </Typography>
+            <Button color="inherit" component={RouterLink} to="/signup">Sign Up</Button>
+            <Button color="inherit" component={RouterLink} to="/login">Login</Button>
+            <Button color="inherit" component={RouterLink} to="/quranplayer">Quran Player</Button>
+          </Toolbar>
+        </AppBar>
+        
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/recorder" element={<Recorder />} /> */}
           <Route path="/quranplayer" element={<QuranPlayer />} />
         </Routes>
       </div>
