@@ -1,13 +1,5 @@
 import React from "react";
 import Recorder from "../Recorder/Recorder";
-import {
-  Box,
-  Text,
-  List,
-  ListItem,
-  useStyleConfig,
-  VStack,
-} from "@chakra-ui/react";
 
 const Ayah = ({
   ayah,
