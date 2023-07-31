@@ -1,56 +1,5 @@
 import React from "react";
 import Recorder from "../Recorder/Recorder";
-import Typography from "@material-ui/core/Typography";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles({
-  ayahText: {
-    marginBottom: "10px",
-    fontSize: "21px",
-    lineHeight: "1.5",
-    textAlign: "center",
-  },
-  translationText: {
-    color: "goldenrod",
-    fontSize: "22px",
-    textAlign: "center",
-  },
-  translationIdentifier: {
-    fontWeight: "bold",
-    fontSize: "28px",
-    color: "goldenrod",
-    textAlign: "center",
-    padding: "5px 20px",
-    position: "relative",
-    "&:after": {
-      content: '""',
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      width: "50%",
-      height: "100%",
-      transform: "translate(-50%, -50%) rotate(45deg)",
-      background: "#FFF",
-      boxShadow: "10px 10px 15px rgba(0,0,0,0.3)",
-      zIndex: -1,
-    },
-  },
-  ayahNumber: {
-    fontSize: "26px",
-    fontWeight: "600",
-    color: "#3f51b5",
-    textAlign: "center",
-  },
-  centered: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column",
-  },
-});
 
 const Ayah = ({
   ayah,
@@ -61,42 +10,34 @@ const Ayah = ({
   setCurrentAyah,
   handleAudioPlay,
 }) => {
-  const classes = useStyles();
-
   return (
-    <div key={ayahIndex}>
-      <Typography variant="h6" className={classes.ayahNumber}>
+    <Box key={ayahIndex}>
+      <Text fontSize="xl" color="blue.500" textAlign="center">
         Ayah Number: {ayah.number}
-      </Typography>
+      </Text>
       <hr />
-      <Typography variant="body1" className={classes.ayahText}>
+      <Text my={3} fontSize="lg" textAlign="center">
         {ayah.text}
-      </Typography>
-      <List dense>
+      </Text>
+      <List spacing={3}>
         {state.selectedTranslations.map((translationIdentifier) => {
           const translation =
             translationSurahData[translationIdentifier]?.ayahs[ayahIndex];
           return (
             translation && (
               <ListItem key={translationIdentifier}>
-                <ListItemText
-                  primary={
-                    <Typography className={classes.translationIdentifier}>
-                      {translationIdentifier}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography className={classes.translationText}>
-                      {translation.text}
-                    </Typography>
-                  }
-                />
+                <VStack align="stretch">
+                  <Text fontSize="2xl" color="yellow.300">
+                    {translationIdentifier}
+                  </Text>
+                  <Text color="yellow.300">{translation.text}</Text>
+                </VStack>
               </ListItem>
             )
           );
         })}
       </List>
-      <div className={classes.centered}>
+      <VStack>
         <audio
           controls
           key={ayah.audio}
@@ -113,8 +54,8 @@ const Ayah = ({
           Your browser does not support the audio element.
         </audio>
         <Recorder />
-      </div>
-    </div>
+      </VStack>
+    </Box>
   );
 };
 

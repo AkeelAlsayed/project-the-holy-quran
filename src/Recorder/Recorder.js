@@ -1,21 +1,11 @@
 import React, { useState } from "react";
-import { ReactMic } from "react-mic";
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-
-const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
+import { Box, Button, Heading, VStack } from "@chakra-ui/react";
+import MicRecorder from "mic-recorder-to-mp3";
 
 const Recorder = () => {
-  const classes = useStyles();
-  const [record, setRecord] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const storage = getStorage();
@@ -23,27 +13,30 @@ const Recorder = () => {
   // if there's no logged in user, don't render anything
   if (!user) return null;
 
+  const Mp3Recorder = new MicRecorder({ bitRate: 128 });
+
   const startRecording = () => {
-    setRecord(true);
+    Mp3Recorder.start()
+      .then(() => {
+        setIsRecording(true);
+      })
+      .catch((e) => console.error(e));
   };
 
   const stopRecording = () => {
-    setRecord(false);
+    Mp3Recorder.stop()
+      .getMp3()
+      .then(async ([buffer, blob]) => {
+        setIsRecording(false);
+        await uploadToFirebase(blob);
+      })
+      .catch((e) => console.error(e));
   };
 
-  const onData = (recordedBlob) => {
-    console.log("chunk of real-time data is: ", recordedBlob);
-  };
-
-  const onStop = async (recordedBlob) => {
-    console.log("recordedBlob is: ", recordedBlob);
-    await uploadToFirebase(recordedBlob);
-  };
-
-  const uploadToFirebase = async (recordedBlob) => {
-    const storageRef = ref(storage, `audio/${user.uid}_${Date.now()}.webm`);
+  const uploadToFirebase = async (blob) => {
+    const storageRef = ref(storage, `audio/${user.uid}_${Date.now()}.mp3`);
     try {
-      await uploadBytes(storageRef, recordedBlob.blob);
+      await uploadBytes(storageRef, blob);
       const downloadURL = await getDownloadURL(storageRef);
       console.log("File available at", downloadURL);
     } catch (error) {
@@ -52,35 +45,27 @@ const Recorder = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h5" component="h2" align="center">
+    <Box p={5}>
+      <Heading as="h2" size="lg" textAlign="center">
         Recorder
-      </Typography>
-      <ReactMic
-        record={record}
-        className="sound-wave"
-        onStop={onStop}
-        onData={onData}
-        strokeColor="#000000"
-        backgroundColor="#FF4081"
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={startRecording}
-      >
-        Start
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        className={classes.button}
-        onClick={stopRecording}
-      >
-        Stop
-      </Button>
-    </Container>
+      </Heading>
+      <VStack spacing={4} align="stretch" mt={5}>
+        <Button
+          colorScheme="teal"
+          onClick={startRecording}
+          disabled={isRecording}
+        >
+          Start
+        </Button>
+        <Button
+          colorScheme="red"
+          onClick={stopRecording}
+          disabled={!isRecording}
+        >
+          Stop
+        </Button>
+      </VStack>
+    </Box>
   );
 };
 

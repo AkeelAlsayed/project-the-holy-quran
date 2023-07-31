@@ -2,32 +2,16 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
+  Box,
   Button,
-  MenuItem,
   FormControl,
   Select,
-  Typography,
+  Text,
   List,
   ListItem,
-  makeStyles,
-} from "@material-ui/core";
+  Image,
+} from "@chakra-ui/react";
 import icon from "../images/icons/donation-gf5437d159_1280.png";
-
-const useStyles = makeStyles((theme) => ({
-  menu: {
-    padding: theme.spacing(2),
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
 
 // PayPal Button
 const PayPalButton = () => {
@@ -35,13 +19,13 @@ const PayPalButton = () => {
     <form action="https://www.paypal.com/donate" method="post" target="_blank">
       <input type="hidden" name="business" value="Inlinex7@gmail.com" />
       <input type="hidden" name="currency_code" value="USD" />
-      <Typography variant="h6" align="center">
+      <Text fontSize="xl" textAlign="center">
         Support us:
-      </Typography>
-      <Button variant="outlined">
-        <img src={icon} alt="Donate" width="35%" />
+      </Text>
+      <Button variant="outline">
+        <Image src={icon} alt="Donate" boxSize="35%" />
       </Button>
-      <img
+      <Image
         alt=""
         src="https://www.paypal.com/en_US/i/scr/pixel.gif"
         width="1"
@@ -62,67 +46,58 @@ const Menu = ({
   editionsWithAudio,
   editionsWithTranslation,
 }) => {
-  const classes = useStyles();
-
   return (
-    <div
-      id="myMenu"
-      className={`menu ${isMenuOpen ? "open" : ""} ${classes.menu}`}
-    >
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="secondary"
-        onClick={toggleMenu}
-      >
+    <Box id="myMenu" className={`menu ${isMenuOpen ? "open" : ""}`} p={5}>
+      <Button variant="solid" colorScheme="red" onClick={toggleMenu} my={2}>
         <FontAwesomeIcon icon={faTimes} />
       </Button>
       <PayPalButton />
-      <FormControl variant="filled" className={classes.formControl}>
-        <Typography variant="subtitle1">Select a Surah number:</Typography>
-        <Select name="selectedNumber" onChange={handleChange}>
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
+      <FormControl variant="filled" my={2}>
+        <Text fontSize="md">Select a Surah number:</Text>
+        <Select
+          name="selectedNumber"
+          onChange={handleChange}
+          placeholder="Select option"
+        >
           {Array.from({ length: 114 }, (_, i) => (
-            <MenuItem key={i} value={i + 1}>
+            <option key={i} value={i + 1}>
               {i + 1}
-            </MenuItem>
+            </option>
           ))}
         </Select>
       </FormControl>
-      <FormControl variant="filled" className={classes.formControl}>
-        <Typography variant="subtitle1">Select an audio edition:</Typography>
+      <FormControl variant="filled" my={2}>
+        <Text fontSize="md">Select an audio edition:</Text>
         {editionsWithAudio.length > 0 && (
-          <Select name="selectedAudio" onChange={handleChange}>
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
+          <Select
+            name="selectedAudio"
+            onChange={handleChange}
+            placeholder="Select option"
+          >
             {editionsWithAudio.map((edition) => (
-              <MenuItem key={edition.identifier} value={edition.identifier}>
+              <option key={edition.identifier} value={edition.identifier}>
                 {edition.name}
-              </MenuItem>
+              </option>
             ))}
           </Select>
         )}
       </FormControl>
-      <FormControl variant="filled" className={classes.formControl}>
+      <FormControl variant="filled" my={2}>
         {editionsWithTranslation.length > 0 && (
-          <div>
-            <Typography variant="subtitle1">
-              Select translation editions:
-            </Typography>
-            <Select name="selectedLanguage" onChange={handleChange}>
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+          <Box>
+            <Text fontSize="md">Select translation editions:</Text>
+            <Select
+              name="selectedLanguage"
+              onChange={handleChange}
+              placeholder="Select option"
+            >
               {languages.map((language, index) => (
-                <MenuItem key={index} value={language}>
+                <option key={index} value={language}>
                   {language}
-                </MenuItem>
+                </option>
               ))}
             </Select>
-            <List>
+            <List spacing={3}>
               {editionsWithTranslation
                 .filter(
                   (edition) => edition.language === state.selectedLanguage
@@ -141,11 +116,11 @@ const Menu = ({
                   </ListItem>
                 ))}
             </List>
-          </div>
+          </Box>
         )}
       </FormControl>
-      <Typography variant="h6">Selected Translations:</Typography>
-      <List>
+      <Text fontSize="xl">Selected Translations:</Text>
+      <List spacing={3}>
         {editionsWithTranslation.length > 0 &&
           state.selectedTranslations.map((selectedTranslation) => {
             const edition = editionsWithTranslation.find(
@@ -169,7 +144,7 @@ const Menu = ({
             );
           })}
       </List>
-    </div>
+    </Box>
   );
 };
 
