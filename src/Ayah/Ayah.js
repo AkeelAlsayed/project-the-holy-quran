@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text, List, ListItem, VStack } from "@chakra-ui/react";
 import Recorder from "../Recorder/Recorder";
+import UserRecordings from "../UserRecordings/UserRecordings";
 const Ayah = ({
   ayah,
   ayahIndex,
@@ -10,6 +11,9 @@ const Ayah = ({
   setCurrentAyah,
   handleAudioPlay,
 }) => {
+  // Create a unique ayahId by combining surah number and ayah number
+  const ayahId = ayahIndex;
+
   return (
     <Box key={ayahIndex}>
       <Text fontSize="xl" color="blue.500" textAlign="center">
@@ -53,7 +57,10 @@ const Ayah = ({
           <source src={ayah.audio} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
-        <Recorder />
+
+        {/* Pass the ayahId prop to the Recorder component */}
+        <Recorder ayahId={ayahId} />
+        <UserRecordings ayahOrder={ayahId} />
       </VStack>
     </Box>
   );

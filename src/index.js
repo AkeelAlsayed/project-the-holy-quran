@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import App from "./App";
 import AuthProvider from "./AuthContext"; // Assuming this is the correct path to your AuthProvider
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
