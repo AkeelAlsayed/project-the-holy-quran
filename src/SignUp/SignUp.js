@@ -10,6 +10,8 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import firebase from "../firebase";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -17,12 +19,24 @@ const SignUp = () => {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    const auth = getAuth(); // Use the Firebase Auth instance directly
+    const auth = getAuth(firebase); // Pass the firebase instance when getting the auth
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // User signed up successfully
         const user = userCredential.user;
         console.log("Sign up successful!", user);
+
+        // Add code here to create a Firestore document for the user
+        const firestore = getFirestore(firebase); // Pass the firebase instance when getting firestore
+        const docRef = doc(firestore, "users", user.uid);
+        return setDoc(docRef, {
+          // Add any user data you want to store in Firestore here
+          email: user.email,
+          createdAt: new Date().toISOString(), // Use Firestore's server timestamp for better accuracy across devices
+        });
+      })
+      .then(() => {
+        console.log("User document created in Firestore");
       })
       .catch((error) => {
         const errorCode = error.code;

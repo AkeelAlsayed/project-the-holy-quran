@@ -11,8 +11,10 @@ import {
 } from "@chakra-ui/react";
 
 const SurahDetails = ({ audioSurahData }) => {
+  // Move the hook calls to the top level
   const titleColor = useColorModeValue("yellow.400", "yellow.600");
   const textColor = useColorModeValue("gray.700", "gray.300");
+  const bgColor = useColorModeValue("gray.100", "gray.700");
 
   return (
     <Box>
@@ -22,7 +24,7 @@ const SurahDetails = ({ audioSurahData }) => {
           shadow="md"
           borderWidth={2}
           borderColor="yellow.400"
-          bg={useColorModeValue("gray.100", "gray.700")}
+          bg={bgColor} // Use the bgColor variable here
           mb={5}
           rounded="md"
         >
