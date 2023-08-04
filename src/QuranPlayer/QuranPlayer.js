@@ -79,16 +79,6 @@ const QuranPlayer = () => {
     }));
   };
 
-  const handleAudioPlay = (currentPlaying) => {
-    audioRefs.current.forEach((audio, index) => {
-      if (audio && index !== currentPlaying) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    });
-    setCurrentAyah(currentPlaying);
-  };
-
   useEffect(() => {
     const fetchEditions = async () => {
       try {
@@ -182,7 +172,6 @@ const QuranPlayer = () => {
               translationSurahData={translationSurahData}
               audioRefs={audioRefs}
               setCurrentAyah={setCurrentAyah}
-              handleAudioPlay={handleAudioPlay} // Pass handleAudioPlay as a prop
             />
           ))}
       </Box>

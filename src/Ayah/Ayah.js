@@ -9,10 +9,26 @@ const Ayah = ({
   translationSurahData,
   audioRefs,
   setCurrentAyah,
-  handleAudioPlay,
 }) => {
   // Create a unique ayahId by combining surah number and ayah number
   const ayahId = ayahIndex;
+  const stopAllAudios = (currentAudioId) => {
+    const audios = document.querySelectorAll("audio");
+    audios.forEach((audio) => {
+      if (audio.id !== currentAudioId) {
+        // Exclude the current audio
+        audio.pause();
+        audio.currentTime = 0; // Reset the audio
+      }
+    });
+  };
+  // Handle audio playback, catching and logging any errors
+  const handlePlay = () => {
+    stopAllAudios(`audio-${ayahIndex}`); // Stop all audios, excluding the current one
+    audioRefs.current[ayahIndex]
+      .play()
+      .catch((error) => console.error("Failed to play audio:", error));
+  };
 
   return (
     <Box key={ayahIndex}>
@@ -44,9 +60,10 @@ const Ayah = ({
       <VStack>
         <audio
           controls
+          id={`audio-${ayahIndex}`}
           key={ayah.audio}
           ref={(ref) => (audioRefs.current[ayahIndex] = ref)}
-          onPlay={() => handleAudioPlay(ayahIndex)}
+          onPlay={() => handlePlay(ayahIndex)}
           onEnded={() => {
             if (audioRefs.current[ayahIndex + 1]) {
               setCurrentAyah(ayahIndex + 1);

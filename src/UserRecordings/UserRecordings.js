@@ -1,59 +1,81 @@
-import React, { useEffect, useState } from "react";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useState, useRef } from "react";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from "../firebase";
 
 const UserRecordings = ({ ayahOrder }) => {
   const [audioFileUrl, setAudioFileUrl] = useState("");
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null); // Add a state for user
+  const [user, setUser] = useState(null);
+  const audioRef = useRef(); // Create a ref to control the audio element
+
+  // Function to stop all audios on the page, excluding the current audio
+  const stopAllAudios = (currentAudioId) => {
+    const audios = document.querySelectorAll("audio");
+    audios.forEach((audio) => {
+      if (audio.id !== currentAudioId) {
+        // Exclude the current audio
+        audio.pause();
+        audio.currentTime = 0; // Reset the audio
+      }
+    });
+  };
 
   useEffect(() => {
     const auth = getAuth();
-    // Listen to auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
 
     return () => {
-      // Cleanup listener on unmount
-      unsubscribe();
+      unsubscribeAuth();
     };
   }, []);
 
   useEffect(() => {
     if (user) {
-      const fetchAudioFile = async () => {
-        try {
-          const firestore = getFirestore(app);
-          const docRef = doc(
-            firestore,
-            "recordings",
-            `${user.uid}_${ayahOrder}`
-          );
-          const docSnapshot = await getDoc(docRef);
+      const firestore = getFirestore(app);
+      const docRef = doc(firestore, "recordings", `${user.uid}_${ayahOrder}`);
 
-          console.log(docSnapshot); // Log snapshot for debugging
-
+      const unsubscribeSnapshot = onSnapshot(
+        docRef,
+        (docSnapshot) => {
           if (docSnapshot.exists()) {
             const audioURL = docSnapshot.data().audioURL;
             if (audioURL !== "") {
               setAudioFileUrl(audioURL);
             }
           }
-        } catch (error) {
-          console.error("Error fetching recording:", error);
-        } finally {
           setLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching recording:", error);
         }
-      };
+      );
 
-      fetchAudioFile();
+      return () => {
+        // Unsubscribe from document updates on component unmount
+        unsubscribeSnapshot();
+      };
     } else {
       setLoading(false);
     }
-  }, [user, ayahOrder]); // Listen to both user and ayahOrder changes
+  }, [user, ayahOrder]);
+
+  // Use an effect to update the audio player when audioFileUrl changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.load(); // This forces the audio element to update its source
+    }
+  }, [audioFileUrl]);
+
+  // Handle audio playback, catching and logging any errors
+  const handlePlay = () => {
+    stopAllAudios(`userAudio-${ayahOrder}`); // Stop all audios, excluding the current one
+    audioRef.current
+      .play()
+      .catch((error) => console.error("Failed to play userAudio:", error));
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -62,7 +84,20 @@ const UserRecordings = ({ ayahOrder }) => {
   return (
     <div>
       {audioFileUrl && (
-        <audio controls>
+        <audio
+          ref={audioRef} // Attach the ref to the audio element
+          controls
+          id={`userAudio-${ayahOrder}`}
+          onEnded={() => {
+            const nextAudio = document.getElementById(
+              `userAudio-${ayahOrder + 1}`
+            );
+            if (nextAudio) {
+              nextAudio.play();
+            }
+          }}
+          onPlay={handlePlay} // Call handlePlay when the audio is played
+        >
           <source src={audioFileUrl} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
