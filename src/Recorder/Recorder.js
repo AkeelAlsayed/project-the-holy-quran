@@ -77,6 +77,9 @@ const Recorder = ({ ayahId }) => {
         ayahOrder: ayahId,
         audioURL: downloadURL,
       });
+
+      // Here is where you clear the audioURL to remove the preview
+      setAudioURL("");
     } catch (error) {
       console.error("Error uploading audio:", error);
     }
