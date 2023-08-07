@@ -51,7 +51,6 @@ const App = () => {
             </Button>
           </ChakraLink>
         </Box>
-
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
