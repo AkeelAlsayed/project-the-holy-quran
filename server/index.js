@@ -321,20 +321,76 @@
 //   console.log(`Server running at http://localhost:${port}`);
 // });
 
+// import express from "express";
+// import fileUpload from "express-fileupload";
+// import fetch from "node-fetch";
+// import cors from "cors";
+// import path from "path";
+// import { fileURLToPath } from "url";
+
+// const app = express();
+// const port = process.env.PORT || 3000; // Use the PORT environment variable for Heroku
+
+// app.use(cors());
+// app.use(fileUpload());
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// // Serve static files from the React frontend app
+// app.use(express.static(path.join(__dirname, "../client/build")));
+
+// app.post("/transcribe", async (req, res) => {
+//   try {
+//     if (!req.files || Object.keys(req.files).length === 0) {
+//       return res.status(400).send("No audio file was uploaded.");
+//     }
+//     const audioFile = req.files.audio;
+//     const data = audioFile.data;
+
+//     const response = await fetch(
+//       "https://api-inference.huggingface.co/models/tarteel-ai/whisper-base-ar-quran",
+//       {
+//         headers: {
+//           Authorization: `Bearer ${process.env.API_TOKEN}`, // Load the token from an environment variable
+//         },
+//         method: "POST",
+//         body: data,
+//       }
+//     );
+
+//     const result = await response.json();
+//     console.log("Transcription Result:", result);
+//     res.json(result);
+//   } catch (error) {
+//     console.error("An error occurred:", error);
+//     res.status(500).send("An error occurred during transcription");
+//   }
+// });
+
+// // Anything that doesn't match the above, send back the index.html file
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname + "/../client/build/index.html"));
+// });
+
+// app.listen(port, () => {
+//   console.log(`Server running at http://localhost:${port}`);
+// });
+// console.log(process.env.API_TOKEN);
+
+import dotenv from "dotenv";
 import express from "express";
 import fileUpload from "express-fileupload";
 import fetch from "node-fetch";
 import cors from "cors";
-import path from "path";
+
+dotenv.config(); // Load environment variables from .env file
 
 const app = express();
-const port = process.env.PORT || 3000; // Use the PORT environment variable for Heroku
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(fileUpload());
-
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.post("/transcribe", async (req, res) => {
   try {
@@ -348,7 +404,7 @@ app.post("/transcribe", async (req, res) => {
       "https://api-inference.huggingface.co/models/tarteel-ai/whisper-base-ar-quran",
       {
         headers: {
-          Authorization: `Bearer ${process.env.API_TOKEN}`, // Load the token from an environment variable
+          Authorization: `Bearer ${process.env.API_TOKEN}`, // Use the token from the .env file
         },
         method: "POST",
         body: data,
@@ -362,11 +418,6 @@ app.post("/transcribe", async (req, res) => {
     console.error("An error occurred:", error);
     res.status(500).send("An error occurred during transcription");
   }
-});
-
-// Anything that doesn't match the above, send back the index.html file
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/../client/build/index.html"));
 });
 
 app.listen(port, () => {
