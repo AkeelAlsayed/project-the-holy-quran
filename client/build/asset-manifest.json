@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.js": "/static/js/main.a95c03fe.js",
+    "static/media/donation-gf5437d159_1280.png": "/static/media/donation-gf5437d159_1280.4c66392f2dee1fb4b128.png",
+    "index.html": "/index.html",
+    "main.a95c03fe.js.map": "/static/js/main.a95c03fe.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.a95c03fe.js"
+  ]
+}
